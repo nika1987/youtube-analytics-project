@@ -1,4 +1,4 @@
-from main.channel import Channel
+from src.channel import Channel
 
 if __name__ == '__main__':
     vdud = Channel('UCMCgOm8GZkHp8zJ6l7_hIuA')
@@ -18,3 +18,6 @@ if __name__ == '__main__':
 
     # создаем файл 'vdud.json' в данными по каналу
     vdud.to_json('vdud.json')
+
+    print(vdud)
+
