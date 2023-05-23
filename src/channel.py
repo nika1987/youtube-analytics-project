@@ -15,18 +15,28 @@ class Channel:
 
     def __init__(self, channel_id: str) -> None:
         """Экземпляр инициализируется id канала. Дальше все данные будут подтягиваться по API."""
-        self.channel_id = channel_id  # id канала
-        self.channel = self.youtube.channels().list(id=self.channel_id, part='snippet,statistics').execute()
+        self._channel_id = channel_id  # id канала
+        self.channel = self.youtube.channels().list(id=self._channel_id, part='snippet,statistics').execute()
         self.title: str = self.channel['items'][0]['snippet']['title']  # название канала
         self.description = self.channel['items'][0]['snippet']['description']  # описание канала
-        self.url = f"https://www.youtube.com/channel/{self.channel_id}"  # ссылка на канал
+        self.url = f"https://www.youtube.com/channel/{self._channel_id}"  # ссылка на канал
         self.subscriber_count = self.channel['items'][0]['statistics']['subscriberCount']  # количество подписчиков
         self.video_count = self.channel['items'][0]['statistics']['videoCount']  # количество видео
         self.viewCount = self.channel['items'][0]['statistics']['viewCount']  # общее количество просмотров
 
+    @property
+    def channel_id(self):
+        return self._channel_id
+
+    @channel_id.setter
+    def channel_id(self, value):
+        self._channel_id = value
+
+
+
     def get_info(self) -> str:
         """Выводит в консоль информацию о канале."""
-        channel = self.youtube.channels().list(id=self.channel_id, part='snippet,statistics').execute()
+        channel = self.youtube.channels().list(id=self._channel_id, part='snippet,statistics').execute()
         return json.dumps(channel)
 
     @classmethod
@@ -37,7 +47,7 @@ class Channel:
     def to_json(self, filename):
         """Метод `to_json()`, сохраняющий в файл значения атрибутов экземпляра Channel"""
 
-        data = {'channel_id': self.channel_id,
+        data = {'channel_id': self._channel_id,
                 'channel': self.channel,
                 'title': self.title,
                 'description': self.description,
