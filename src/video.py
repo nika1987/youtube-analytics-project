@@ -59,6 +59,7 @@ class PlayList:
         """
         video_id = []
         for item in self._response["items"]:
+            print(item)
             video_id.append(item["contentDetails"]["videoId"])
 
         response = self.youtube.videos().list(part='contentDetails,statistics',
@@ -68,7 +69,4 @@ class PlayList:
         for item in response["items"]:
             duration += isodate.parse_duration(item["contentDetails"]["duration"])
         return duration
-
-
-
 
