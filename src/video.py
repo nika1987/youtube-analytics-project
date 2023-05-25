@@ -57,14 +57,17 @@ class PlayList:
         Returns:
             timedelta: Общая длительность плейлиста.
         """
+        response = self.youtube.playlists().list(part="snippet,contentDetails", id=self.playlist_id).execute()
+        print(response)
         video_id = []
         for item in self._response["items"]:
-            print(item)
-            video_id.append(item["contentDetails"]["videoId"])
+
+            video_id.append(item["id"])
 
         response = self.youtube.videos().list(part='contentDetails,statistics',
                                                      id=','.join(video_id)
                                                      ).execute()
+        print(response)
         duration = datetime.timedelta()
         for item in response["items"]:
             duration += isodate.parse_duration(item["contentDetails"]["duration"])
