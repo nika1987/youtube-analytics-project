@@ -16,13 +16,20 @@ class Video:
         """
         Инициализация класса Video
         """
-        self.video_id = video_id
-        response = self.youtube.videos().list(part="snippet,statistics", id=self.video_id).execute()
-        #print(response)
-        self.title = response["items"][0]["snippet"]["title"]
-        self.url = response["items"][0]["snippet"]["thumbnails"]["default"]["url"]
-        self.views = response["items"][0]["statistics"]["viewCount"]
-        self.likes = response["items"][0]["statistics"]["likeCount"]
+        try:
+            self.video_id = video_id
+            response = self.youtube.videos().list(part="snippet,statistics", id=self.video_id).execute()
+            #print(response)
+            self.title = response["items"][0]["snippet"]["title"]
+            self.url = response["items"][0]["snippet"]["thumbnails"]["default"]["url"]
+            self.views = response["items"][0]["statistics"]["viewCount"]
+            self.likes = response["items"][0]["statistics"]["likeCount"]
+        except (IndexError, KeyError):
+            self.title = None
+            self.url = None
+            self.views = None
+            self.likes = None
+
 
     def __str__(self):
         return self.title
@@ -72,4 +79,3 @@ class PlayList:
         for item in response["items"]:
             duration += isodate.parse_duration(item["contentDetails"]["duration"])
         return duration
-
